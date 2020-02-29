@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="./manifest.json">
+    <title>Crypto Keychain</title>
+    
+    <!-- Components -->
+    <script src="./app.js" type="module"></script>
+
+    <!-- Libraries -->
+    <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+    <script src="./bip39.browser.js"></script>
+    <script src="./bip32.browser.js"></script>
+    <!-- <script src="https://unpkg.com/blockstack@19.3.0/dist/blockstack.js" integrity="sha384-kscoAgc5pZqovHWSKndfyn3OeKHfRSh+Xc5wYc+E02BuyQV2zwEEHJ7p5drKnRrX" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsontokens@3.0.0/dist/jsontokens.min.js"></script> -->
+
+</head>
+<body>
+    <local-keychain></local-keychain>
+    
+    <!-- Debugging only -->
+    <script>
+        window.keychain = document.getElementsByTagName("local-keychain")[0]
+    </script>
+</body>
+</html>
