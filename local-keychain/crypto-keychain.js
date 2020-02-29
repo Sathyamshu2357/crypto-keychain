@@ -21,7 +21,6 @@ class CryptoKeychain extends LitElement {
 
     render() {
         return html`
-            <h4>Crypto Keychain:</h4>
             <pre>${this.log}</pre>
         `;
     }

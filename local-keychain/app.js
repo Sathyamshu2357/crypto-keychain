@@ -17,6 +17,7 @@ class LocalKeychain extends LitElement {
     }
     render() {
         return html`
+            <h2>Crypto Keychain:</h2>
             ${this.scanForConnection
                 ? html`
                     <webrtc-connector
