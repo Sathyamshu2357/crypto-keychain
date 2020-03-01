@@ -168,7 +168,7 @@ class WebRTCConnector extends LitElement {
             .then(async (answer) => {
                 answer = new RTCSessionDescription(answer);
                 this.peer.setLocalDescription(answer)
-                await this.gatherPromise;
+                await Promise.race([this.gatherPromise, new Promise(resolve => setTimeout(resolve, 3000))]);
                 console.log("ANSWER_WITH_CANDIDATES:")
                 // answerAndCandidates = btoa(JSON.stringify([answer.toJSON(), candidateList]))
                 let answerAndCandidates = [answer.toJSON(), this.candidateList]
