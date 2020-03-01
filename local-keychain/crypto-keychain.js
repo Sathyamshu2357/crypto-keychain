@@ -47,9 +47,9 @@ class CryptoKeychain extends LitElement {
                 })
             }     
         } else if (request['method'] === "getAccounts") {
-            this.respond(Object.assign(request, {values: this.accounts}));
+            confirm(`requesting accounts`) && this.respond(Object.assign(request, {values: this.accounts}));
         } else if (request['method'] === "signTx") {
-            this.respond(Object.assign(request, {values: ["done"]}));
+            confirm(`singature request`) && this.respond(Object.assign(request, {values: ["done"]}));
         } else {
             console.log(`unsupported requestMethod: ${request['method']}`)
         }

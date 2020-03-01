@@ -22,7 +22,9 @@ class TransactionPage extends LitElement {
     render() {
         return html`
             <h2>Transaction Page (completely open-source)</h2>
+            <div style="display:${this.connected ? "none": "block"}">
             scan the QR with your keychain
+            </div>
             <br><br>
             <webrtc-connector
                 .offerer=${true}
