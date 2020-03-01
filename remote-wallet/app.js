@@ -2,6 +2,7 @@ import {LitElement, html} from 'https://unpkg.com/lit-element/lit-element.js?mod
 import "../common/webrtc-connector.js";
 import "../common/webrtc-messenger.js";
 import "./bitcoin-wallet.js";
+import "./ethereum-wallet.js";
 class RemoteWallet extends LitElement {
     static get properties() {
         return {
@@ -26,6 +27,10 @@ class RemoteWallet extends LitElement {
                     <bitcoin-wallet
                         .dataChannel=${this.dataChannel}
                     ></bitcoin-wallet>
+                    
+                    <ethereum-wallet
+                        .dataChannel=${this.dataChannel}
+                    ></ethereum-wallet>
 
                     <webrtc-messenger
                         .dataChannel=${this.dataChannel}

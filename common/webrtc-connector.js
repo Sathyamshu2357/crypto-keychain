@@ -10,43 +10,44 @@ const iceConfiguration = {
 class WebRTCConnector extends LitElement {
     static get properties() {
         return {
+            showEstablishment: { type: Boolean },
             offerer: { type: Boolean },
             answerer: { type: Boolean },
             codeValue: { type: String },
             codeSource: { type: String },
-            showConnected: { type: Boolean },
-            showEstablishment: { type: Boolean },
             dataChannel: { type: RTCDataChannel },
             showQRScanner: { type: Boolean },
         };
     }
     constructor(){
         super();
+        this.showEstablishment = true;
         this.showQRScanner = false;
         this.codeSource = "https://www.w3schools.com/tags/smiley.gif"
         this.codeValue = ""
         this.jsonLink = undefined
         this.answer = ""
-        this.showEstablishment = true;
-        this.showConnected = false;
         this.init()
     }
     render() {
         return html`
-            <div id="establishment" style="display: ${this.showEstablishment ? "block" : "none"}">
-                <div id="qrModal" style="position:fixed;z-index: 2;display:${this.showQRScanner ? "block" : "none"}">
-                    <video id="qrScanner"></video>
-                </div>
-                <img id="code" alt="offer/answer" src=${this.codeSource}><br><br>
-                ${!this.offerer && !this.answerer
-                    ? html`
-                        <pre id="codeValue">${this.codeValue}</pre>
-                        <button @click=${this.createOffer}>Generate Offer</button><br><br>
-                        <button @click=${this.acceptOffer}>Scan QR</button><br><br>
-                    `
-                    : html``
+            <style>
+                :host {
+                    display: ${ this.showEstablishment ? "block" : "none" }
                 }
+            </style>
+            <div id="qrModal" style="position:fixed;z-index: 2;display:${this.showQRScanner ? "block" : "none"}">
+                <video id="qrScanner"></video>
             </div>
+            <img id="code" alt="offer/answer" src=${this.codeSource}><br><br>
+            ${!this.offerer && !this.answerer
+                ? html`
+                    <pre id="codeValue">${this.codeValue}</pre>
+                    <button @click=${this.createOffer}>Generate Offer</button><br><br>
+                    <button @click=${this.acceptOffer}>Scan QR</button><br><br>
+                `
+                : html``
+            }
         `;
     }
     firstUpdated(changedProperties) {
@@ -59,6 +60,7 @@ class WebRTCConnector extends LitElement {
         }
     }
     dispatchConnectionEvent = () => {
+        this.showEstablishment = false;
         let event = new CustomEvent('connected', {
             detail: {
                 dataChannel: this.dataChannel,
@@ -84,7 +86,6 @@ class WebRTCConnector extends LitElement {
             this.dataChannel = event.channel;
             console.log("incoming dataChannel:", this.dataChannel)
             this.dispatchConnectionEvent();
-            this.enableMessenger()
         };
     
         this.gatherPromise = new Promise((resolve, reject) => {
@@ -95,6 +96,7 @@ class WebRTCConnector extends LitElement {
             }
         })
         this.peer.oniceconnectionstatechange = async (event) => {
+            // TODO: revalidate reconnection logic
             console.log(this.peer.iceConnectionState)
             if (this.peer.iceConnectionState === "disconnected" && this.jsonLink) {
                 this.offerer ? this.createOffer() : await this.acceptOffer()
@@ -108,7 +110,6 @@ class WebRTCConnector extends LitElement {
         this.dataChannel = this.peer.createDataChannel("messenger", {ordered: true});
         this.dataChannel.addEventListener('open', () => {
             this.dispatchConnectionEvent()
-            this.enableMessenger()
         })
 
         this.peer.createOffer()
@@ -211,10 +212,6 @@ class WebRTCConnector extends LitElement {
                 console.error(e);
             });
         })
-    }
-    enableMessenger = () => {
-        this.showEstablishment = false;
-        this.showConnected = true;
     }
 }
 customElements.define('webrtc-connector', WebRTCConnector);

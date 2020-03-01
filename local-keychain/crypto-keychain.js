@@ -37,10 +37,7 @@ class CryptoKeychain extends LitElement {
             const path = request['params'][0]
             if (confirm(`derivePath: ${path}`)) {
                 const node = this.rootNode.derivePath(path)
-                this.respond({
-                    method: request['method'],
-                    values: [node.publicKey.toString('hex')],
-                })      
+                this.respond(Object.assign(request, {values: [node.publicKey.toString('hex')]}))      
             } else {
                 this.reject({
                     id: request['id'],

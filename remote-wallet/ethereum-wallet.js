@@ -1,10 +1,10 @@
 import {LitElement, html} from 'https://unpkg.com/lit-element/lit-element.js?module';
 const purpose = "44'"  // BIP-44
-const coin = "0'"  // bitcoin
+const coin = "60'"  // ethereum
 const account = "0'"
 const change = 0    // 0 - normal address chain | 1 - change address chain
 const index = 0 // address Index
-class BitcoinWallet extends LitElement {
+class EthereumWallet extends LitElement {
     static get properties() {
         return {
             dataChannel: { type: RTCDataChannel },
@@ -14,13 +14,13 @@ class BitcoinWallet extends LitElement {
     }
     constructor(){
         super();
-        this.network = "bitcoin";
+        this.network = "ethereum";
         this.log = "";
         this.address = "";
     }
     render() {
         return html`
-            <h4>Bitcoin Wallet:</h4>
+            <h4>Ethereum Wallet:</h4>
             <button @click=${this.requestAddress}>Get Address</button><div>${this.address}</div>
             <pre>${this.log}</pre>
         `;
@@ -43,7 +43,7 @@ class BitcoinWallet extends LitElement {
         this.log = this.log + `\n${msgEvent.data}`
         if (response['status'] === "success" && response['method'] === "derivePath") {
             const hexPubkey = response['values'][0]
-            this.address = bitcoin.payments.p2pkh({ pubkey: Buffer.from(hexPubkey, 'hex') }).address
+            this.address = ethUtil.toChecksumAddress(ethUtil.pubToAddress(`0x${hexPubkey}`, true).toString('hex'))
         }
     }
     request = (requestMethod, params) => {
@@ -54,4 +54,4 @@ class BitcoinWallet extends LitElement {
         }))
     }
 }
-customElements.define('bitcoin-wallet', BitcoinWallet);
+customElements.define('ethereum-wallet', EthereumWallet);
