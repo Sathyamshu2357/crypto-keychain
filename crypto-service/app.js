@@ -8,6 +8,7 @@ class CryptoService extends LitElement {
     }
     constructor(){
         super();
+        this.depositCurrency = "eth"
         this.depositAddress = sampleETHDepositAddress
         this.value = "0.0001"
         this.channelId = "bc-channel-1"
@@ -31,7 +32,13 @@ class CryptoService extends LitElement {
         `;
     }
     handleTransactionPageDeposit = (event) => {
-        window.open(`/transaction-page/?channelId=${this.channelId}&currency="ETH"&toAddress=${this.depositAddress}&value=${this.value}`)
+        const url = new URL(window.location.href);
+        url.pathname = url.pathname.replace("crypto-service", "transaction-page");
+        url.searchParams.set('channelId', this.channelId);
+        url.searchParams.set('currency', this.depositCurrency);
+        url.searchParams.set('toAddress', this.depositAddress);
+        url.searchParams.set('value', this.value);
+        window.open(url.toString())
     }
 }
 customElements.define('crypto-service', CryptoService);
