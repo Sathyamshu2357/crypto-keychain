@@ -17,6 +17,8 @@ class CryptoKeychain extends LitElement {
             localStorage.setItem('mnemonic', mnemonic)
         }
         this.rootNode = bip32.fromSeed(bip39.mnemonicToSeedSync(mnemonic))
+
+        this.accounts = localStorage.getItem('accounts') ? JSON.parse(localStorage.getItem('accounts')) : [{index: 0, name: "rootAccount"}]
     }
 
     render() {
@@ -37,12 +39,17 @@ class CryptoKeychain extends LitElement {
             const path = request['params'][0]
             if (confirm(`derivePath: ${path}`)) {
                 const node = this.rootNode.derivePath(path)
-                this.respond(Object.assign(request, {values: [node.publicKey.toString('hex')]}))      
+                const hexPubkey = node.publicKey.toString('hex');
+                this.respond(Object.assign(request, {values: [hexPubkey]}))      
             } else {
                 this.reject({
                     id: request['id'],
                 })
             }     
+        } else if (request['method'] === "getAccounts") {
+            this.respond(Object.assign(request, {values: this.accounts}));
+        } else if (request['method'] === "signTx") {
+            this.respond(Object.assign(request, {values: ["done"]}));
         } else {
             console.log(`unsupported requestMethod: ${request['method']}`)
         }
